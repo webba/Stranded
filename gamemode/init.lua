@@ -10,13 +10,11 @@ include("config.lua")
 
 //Player
 
-local _R = debug.getregistry(0
-local PlayerMeta = _R.Player or {}
-local EntityMeta = _R.Entity or {}
-PlayerMeta.Skills = {}
-PlayerMeta.Stats = {}
-PlayerMeta.Experience = {}
-PlayerMeta.Resources = {}
+local _R = debug.getregistry()
+_R.Player.Skills = {}
+_R.Player.Stats = {}
+_R.Player.Experience = {}
+_R.Player.Resources = {}
 
 
 function FirstSpawn( ply )
@@ -182,18 +180,18 @@ GM.AddCommand("AFK", AFK, "Go afk derp")
 
 
 //XP/Level System 
-function PlayerMeta:HasSkill( skill )
+function _R.Player:HasSkill( skill )
 	if not self.Skills[skill] then self.Skills[skill]=0 end
 end
 
 
-function PlayerMeta:SetSkill( skill, level )
+function _R.Player:SetSkill( skill, level )
 	self:HasSkill(skill)
 	self.Skills[skill]=level
 
 end
 
-function PlayerMeta:IncrementSkill( skill )
+function _R.Player:IncrementSkill( skill )
 	self:HasSkill()
 	self:SetSkill(skill, self.Skills[skill]+1)
 	if self.Skills[skill] % 10 == 0 then
@@ -201,16 +199,16 @@ function PlayerMeta:IncrementSkill( skill )
 	end
 end
 
-function PlayerMeta:HasSkillXP( skill )
+function _R.Player:HasSkillXP( skill )
 	if not self.Experience[skill] then self.Skills[skill]=0 end
 end
 
-function PlayerMeta:SetXP( skill, level )
+function _R.Player:SetXP( skill, level )
 	self:HasSkillXP(skill)
 	self.Experience[skill]=level
 end
 
-function PlayerMeta:IncrementXP( skill, ammount )
+function _R.Player:IncrementXP( skill, ammount )
 	self:HasSkillXP()
 	self:SetExperience(skill, self.Experience[skill]+ammount)
 	if self.Experience[skill] >= 100 then
@@ -220,17 +218,17 @@ function PlayerMeta:IncrementXP( skill, ammount )
 end
 
 
-function PlayerMeta:IncrementStat( skill )
+function _R.Player:IncrementStat( skill )
 	self.Stats[skill]=self.Stats[skill]+1
 end
 
 //Resources System
-function PlayerMeta:SetResource( resource, int )
+function _R.Player:SetResource( resource, int )
 	if !self.Resources[resource] then self.Resources[resource] = 0 end
 	self.Resources[resource] = int
 end
 
-function PlayerMeta:GetTotalResources()
+function _R.Player:GetTotalResources()
 	local n=0
 	for k,v in pairs(self.Resorces) do
 		n=n+v
@@ -238,7 +236,7 @@ function PlayerMeta:GetTotalResources()
 	return n
 end
 
-function PlayerMeta:AddResorce( resource, int )
+function _R.Player:AddResorce( resource, int )
 	if !self.Resources[resource] then self.Resources[resource] = 0 end
 	local currentresources = self.GetTotalResources()
 	local max = self.MaxResources
@@ -251,7 +249,7 @@ function PlayerMeta:AddResorce( resource, int )
 	end
 end
 
-function PlayerMeta:RemoveResource(resource,int)
+function _R.Player:RemoveResource(resource,int)
 	if !self.Resources[resource] then self.Resources[resource] = 0 end
 	if 	self.Resources[resource] - int >= 0 then 
 		self.Resources[resource] = self.Resources[resource] - int
@@ -263,7 +261,7 @@ function PlayerMeta:RemoveResource(resource,int)
 	end
 end
 
-function PlayerMeta:DropResource(resource,int)
+function _R.Player:DropResource(resource,int)
 	local ammount = self:RemoveResource(resource, int)
 	local tr = self.:GetEyeTrace()
 	local ent = ents.Create("resourcecrate")
