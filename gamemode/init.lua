@@ -57,9 +57,15 @@ hook.Add( "PlayerLoadout", "DefaultLoadout", DefaultLoadout)
 function PlayerNeeds()
 	for k, ply in pairs(player.GetAll()) do
 		if ply:Alive() and not ply.AFK then
-			if ply.Food > 0 then ply.Food = math.Clamp(ply.Food-1, 0, 100)
-			if ply.Water > 0 then ply.Water = math.Clamp(ply.Water-1, 0, 100)
-			if ply.Tiredness > 0 then ply.Tiredness = math.Clamp(ply.Tiredness-1, 0, 100)
+			if ply.Food > 0 then
+				ply.Food = math.Clamp(ply.Food-1, 0, 100)
+			end
+			if ply.Water > 0 then
+				ply.Water = math.Clamp(ply.Water-1, 0, 100)
+			end
+			if ply.Tiredness > 0 then
+				ply.Tiredness = math.Clamp(ply.Tiredness-1, 0, 100)
+			end
 		end
 		if ply.Food == 0 or ply.Water==0 or ply.Tiredness==0 then
 			if ply:Health()>2 then
