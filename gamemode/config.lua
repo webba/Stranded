@@ -5,6 +5,8 @@ GM.Config.Runspeed = 300
 
 GM.Config.StartingWeapons = { "gmod_camera" }
 
+GM.Config.ChatCommandPrefix = "/"
+
 GM.Config.SkilltoStat = {}
 GM.Config.SkilltoStat["Woodcutting"] = "Strength"
 GM.Config.SkilltoStat["Mining"] = "Strength"

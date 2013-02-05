@@ -9,8 +9,10 @@ include("shared.lua")
 include("config.lua")
 
 //Player
-local PlayerMeta = FindMetaTable("Player")
-local EntityMeta = FindMetaTable("Entity")
+
+local _R = debug.getregistry(0
+local PlayerMeta = _R.Player or {}
+local EntityMeta = _R.Entity or {}
 PlayerMeta.Skills = {}
 PlayerMeta.Stats = {}
 PlayerMeta.Experience = {}
@@ -75,12 +77,11 @@ end
 //Factions
 GM.Factions = {
 	{ 
-		name = "Default_Faction"
-		id=1
+		name = "Default_Faction",
+		id=1,
 		password = ""
 	}
 }
-GM.FactionsCount = 1
 
 function CreateFaction( ply, tbl )
 	if # tbl == 5 or # tbl == 4 then
@@ -111,8 +112,7 @@ function CreateFaction( ply, tbl )
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /CreateFaction Name Red Green Blue Password(Optional)")
 	end
 end
-AddChatCommand("/CreateFaction", CreateFaction)
-concommand.Add( "stranded_createfaction", CreateFaction)
+GM.AddCommand("CreateFaction", CreateFaction, "Create A Faction")
 
 function JoinFaction( ply, tbl )
 	if # tbl == 1 or # tbl == 2 then
@@ -139,41 +139,41 @@ function JoinFaction( ply, tbl )
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /JoinFaction Name Password(Optional)")
 	end
 end
-AddChatCommand("/JoinFaction", JoinFaction)
-concommand.Add( "stranded_joinfaction", JoinFaction)
+GM.AddCommand("JoinFaction", JoinFaction, "Join A Faction")
 
 function LeaveFaction( ply, tbl )
 	local f = team.GetName( ply:Team() )
 	ply:SetTeam(1)
 	ply:ChatPrint("You Left "..f)
 end
-AddChatCommand("/LeaveFaction", LeaveFaction)
-concommand.Add( "stranded_leavefaction", LeaveFaction)
+GM.AddCommand("LeaveFaction", LeaveFaction, "Leave Your Current Faction")
 
 //Chat Commands
-GM.ChatCommands = {}
+GM.Commands = {}
 
 function RunChatCommand( ply , text, public )
-	local chattext = string.Explode(" ", text)
-	local args = chattext 
-	table.remove(args, 1)
-	for k,v in pairs(GM.ChatCommands) do
-		if ( v.cmd == chattext[1] ) then
-			v.func( ply, args )
-			return "" 
-		end 
+	if string.sub(text, 1, 1)== GM.Config.ChatCommandPrefix then
+		local chattext = string.Explode(" ", string.sub(text, 2))
+		local args = chattext 
+		table.remove(args, 1)
+		for k,v in pairs(GM.Commands) do
+			if ( v.cmd == chattext[1] ) then
+				v.func( ply, args )
+				return "" 
+			end 
+		end
 	end
 end
 hook.Add( "PlayerSay", "ChatCommand", RunChatCommand )
 
-function AddChatCommand( com, funct )
-	for k,v in pairs(ChatCommands) do
-		if cmd == v.cmd then return end
-	end
-	GM.ChatCommands[cmd] = {
-		cmd = cmd,
-		func = funct,
-	}
+function GM.AddCommand(command, func, description)
+    concommand.Add("stranded_" .. command, function(ply, cmd, args)
+        func(ply, args)
+    end)
+    GM.Commands[command] = {
+        desc = description,
+        func = func
+    }
 end
 
 function AFK( ply, tbl )
@@ -185,8 +185,7 @@ function AFK( ply, tbl )
 		ply.AFK = true
 	end
 end
-AddChatCommand("/AFK", AFK)
-concommand.Add( "stranded_afk", AFK)
+GM.AddCommand("AFK", AFK, "Go afk derp")
 
 
 //XP/Level System 
