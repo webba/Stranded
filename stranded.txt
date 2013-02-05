@@ -1,0 +1,17 @@
+"Gamemode"
+{
+	"base"		"base"
+    "title"  "Stranded"
+    "version"   "1.0"
+    "menusystem"	"1"
+
+    "author_name"   "Le Weeb"
+    "author_email"  ""
+    "author_url"    ""
+
+    "maps"  "^stranded_"
+
+    "icon"  ""
+    "info"  ""
+    "hide"  "0"
+}

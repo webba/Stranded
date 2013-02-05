@@ -152,15 +152,13 @@ GM.AddCommand("LeaveFaction", LeaveFaction, "Leave Your Current Faction")
 GM.Commands = {}
 
 function RunChatCommand( ply , text, public )
-	if string.sub(text, 1, 1)== GM.Config.ChatCommandPrefix then
-		local chattext = string.Explode(" ", string.sub(text, 2))
-		local args = chattext 
+	if string.sub(text, 1, 1) == GM.Config.ChatCommandPrefix then
+		local args = string.Explode(" ", string.sub(text, 2))
+		local cmd = args[1]
 		table.remove(args, 1)
-		for k,v in pairs(GM.Commands) do
-			if ( v.cmd == chattext[1] ) then
-				v.func( ply, args )
-				return "" 
-			end 
+		if GM.Commands[cmd] then
+			GM.Commands[cmd].func( ply, args )
+			return "" 
 		end
 	end
 end
@@ -177,13 +175,8 @@ function GM.AddCommand(command, func, description)
 end
 
 function AFK( ply, tbl )
-	if ply.AFK then 
-		ply:Freeze(false)
-		ply.AFK = false
-	elseif not ply.AFK then 
-		ply:Freeze(true)
-		ply.AFK = true
-	end
+	ply:Freeze(!ply.AFK)
+	ply.AFK = !ply.AFK
 end
 GM.AddCommand("AFK", AFK, "Go afk derp")
 
