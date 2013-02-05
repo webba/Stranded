@@ -6,29 +6,38 @@ AddCSLuaFile("shared.lua")
 
 //Includes
 include("shared.lua")
+include("config.lua")
 
 //Player
-player.Skills = {}
-player.Stats = {}
-player.Experience = {}
+local PlayerMeta = FindMetaTable("Player")
+local EntityMeta = FindMetaTable("Entity")
+PlayerMeta.Skills = {}
+PlayerMeta.Stats = {}
+PlayerMeta.Experience = {}
+PlayerMeta.Resources = {}
 
 
 function FirstSpawn( ply )
  
     ply:SetTeam( 1 )--Set Team
 
-	ply:SetWalkSpeed(250)--Set Speed
-	ply:SetRunSpeed(400)
-
 	self:PlayerLoadout(ply)--Set Loadout
 
+	ply.Stats = GM.Config.DefaultStats
 	ply.Food = 100
 	ply.Tiredness = 100
 	ply.Water = 100
 	ply.AFK = false
+
+	ply:SetWalkSpeed(GM.Config.Walkspeed)--Set Speed
+	ply:SetRunSpeed(CalculateRunSpeed( ply ))
  
 end 
 hook.Add( "PlayerInitialSpawn", "FirstSpawn", FirstSpawn )
+
+function CalculateRunSpeed( ply )
+	return (GM.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
+end
 
 function DefaultLoadout( ply ) 
  
@@ -36,8 +45,10 @@ function DefaultLoadout( ply )
 
     	ply:StripWeapons()
     	ply:StripAmmo() 
-    	ply:Give("gmod_camera")
- 
+    	for k,v in pairs(GM.Config.StartingWeapons) do
+    		ply:Give(v)
+    	end
+    	 
     end 
  
 end
@@ -179,34 +190,118 @@ concommand.Add( "stranded_afk", AFK)
 
 
 //XP/Level System 
-function player:SetSkill( skill, level )
-
+function PlayerMeta:HasSkill( skill )
 	if not self.Skills[skill] then self.Skills[skill]=0 end
+end
 
+
+function PlayerMeta:SetSkill( skill, level )
+	self:HasSkill(skill)
 	self.Skills[skill]=level
 
 end
 
-function player:GetSkill(skill)
-	return self.Skills[skill] or 0	
+function PlayerMeta:IncrementSkill( skill )
+	self:HasSkill()
+	self:SetSkill(skill, self.Skills[skill]+1)
+	if self.Skills[skill] % 10 == 0 then
+		self:IncrementStat(GM.Config.SkilltoStat[skill])
+	end
 end
 
-function player:IncrementSkill( skill )
-	self:SetSkill(skill, self:GetSkill(skill)+1)
+function PlayerMeta:HasSkillXP( skill )
+	if not self.Experience[skill] then self.Skills[skill]=0 end
 end
 
-function player:SetXP( skill, level )
-
-	if not self.Experience[skill] then self.Experience[skill]=0 end
-
+function PlayerMeta:SetXP( skill, level )
+	self:HasSkillXP(skill)
 	self.Experience[skill]=level
-
 end
 
-function player:GetXP(skill)
-	return self.Experience[skill] or 0	
+function PlayerMeta:IncrementXP( skill, ammount )
+	self:HasSkillXP()
+	self:SetExperience(skill, self.Experience[skill]+ammount)
+	if self.Experience[skill] >= 100 then
+		self:IncrementSkill(skill)
+		self.Experience[skill] = 0
+	end
 end
 
-function player:IncrementXP( skill )
-	self:SetExperience(skill, self:GetExperience(skill)+1)
+
+function PlayerMeta:IncrementStat( skill )
+	self.Stats[skill]=self.Stats[skill]+1
+end
+
+//Resources System
+function PlayerMeta:SetResource( resource, int )
+	if !self.Resources[resource] then self.Resources[resource] = 0 end
+	self.Resources[resource] = int
+end
+
+function PlayerMeta:GetTotalResources()
+	local n=0
+	for k,v in pairs(self.Resorces) do
+		n=n+v
+	end
+	return n
+end
+
+function PlayerMeta:AddResorce( resource, int )
+	if !self.Resources[resource] then self.Resources[resource] = 0 end
+	local currentresources = self.GetTotalResources()
+	local max = self.MaxResources
+	if currentresources+int > max then
+		self.Resources[resource] = self.Resources[resource] + (max - all)
+		self:DropResource(resource,(all + int) - max)
+		self:SendMessage("Your invetory is full!",3,Color(200,0,0,255))
+	else
+		self.Resources[resource] = self.Resources[resource] + int
+	end
+end
+
+function PlayerMeta:RemoveResource(resource,int)
+	if !self.Resources[resource] then self.Resources[resource] = 0 end
+	if 	self.Resources[resource] - int >= 0 then 
+		self.Resources[resource] = self.Resources[resource] - int
+		return int
+	else
+		local res = self.Resouces[resource]
+		self.Resouces[resource] = 0
+		return res
+	end
+end
+
+function PlayerMeta:DropResource(resource,int)
+	local ammount = self:RemoveResource(resource, int)
+	local tr = self.:GetEyeTrace()
+	local ent = ents.Create("resourcecrate")
+	ent:SetPos(tr.HitPos)
+	ent:SetNWInt("Owner", self:UniqueID())
+	ent.Resources[resource]=int
+	ent:Spawn()
+end
+
+
+function CombineResourceCrates(enta, endtb) 
+	if not enta:IsValid() or not entb:IsValid() then return end 
+	if enta:GetClass() ~= "resourcecrate" or entb:GetClass() ~= "resourcecrate" then return end 
+	if enta:GetNWInt("Owner") ~= nil and enta:GetNWInt("Owner") == entb:GetNWInt("Owner") then
+		local ent = ents.Create("resourcecrate")
+		ent:SetPos(enta:GetPos())
+		ent:SetAngles(enta:GetAngles()) 
+		ent:SetNWInt("Owner", enta:GetNWInt("Owner"))
+		for k,v in pairs(enta.Resources) do
+			ent.Resorces[k] = v
+		end
+		for k,v in pairs(entb.Resources) do
+			if ent.Resources[k] then
+				ent.Resources[k] = ent.Resources[k] + entb.Resources[k]
+			else
+				ent.Resources[k] = entb.Resources[k]
+			end
+		end
+		ent:Spawn()
+		enta:Remove()
+		entb:Remove()
+	end
 end
