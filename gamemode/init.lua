@@ -77,6 +77,32 @@ function PlayerNeeds()
 	end
 end
 
+//Chat Commands
+GM.Commands = {}
+
+function RunChatCommand( ply , text, public )
+	if string.sub(text, 1, 1) == GM.Config.ChatCommandPrefix then
+		local args = string.Explode(" ", string.sub(text, 2))
+		local cmd = args[1]
+		table.remove(args, 1)
+		if GM.Commands[cmd] then
+			GM.Commands[cmd].func( ply, args )
+			return "" 
+		end
+	end
+end
+hook.Add( "PlayerSay", "ChatCommand", RunChatCommand )
+
+function GM.AddCommand(command, func, description)
+    concommand.Add("stranded_" .. command, function(ply, cmd, args)
+        func(ply, args)
+    end)
+    GM.Commands[command] = {
+        desc = description,
+        func = func
+    }
+end
+
 
 //Factions
 GM.Factions = {
@@ -151,32 +177,6 @@ function LeaveFaction( ply, tbl )
 	ply:ChatPrint("You Left "..f)
 end
 GM.AddCommand("LeaveFaction", LeaveFaction, "Leave Your Current Faction")
-
-//Chat Commands
-GM.Commands = {}
-
-function RunChatCommand( ply , text, public )
-	if string.sub(text, 1, 1) == GM.Config.ChatCommandPrefix then
-		local args = string.Explode(" ", string.sub(text, 2))
-		local cmd = args[1]
-		table.remove(args, 1)
-		if GM.Commands[cmd] then
-			GM.Commands[cmd].func( ply, args )
-			return "" 
-		end
-	end
-end
-hook.Add( "PlayerSay", "ChatCommand", RunChatCommand )
-
-function GM.AddCommand(command, func, description)
-    concommand.Add("stranded_" .. command, function(ply, cmd, args)
-        func(ply, args)
-    end)
-    GM.Commands[command] = {
-        desc = description,
-        func = func
-    }
-end
 
 function AFK( ply, tbl )
 	ply:Freeze(!ply.AFK)
