@@ -85,8 +85,8 @@ function CreateFaction( ply, tbl )
 	if # tbl == 5 or # tbl == 4 then
 		local fname = tbl[1]
 		local color = 	{
-			red=math.Clamp(tonumber(tbl[2]),0,255)
-			green=math.Clamp(tonumber(tbl[3]),0,255)
+			red=math.Clamp(tonumber(tbl[2]),0,255),
+			green=math.Clamp(tonumber(tbl[3]),0,255),
 			blue=math.Clamp(tonumber(tbl[4]),0,255)
 		}
 		if tbl[5] and tbl[5] ~= "" then
@@ -99,8 +99,8 @@ function CreateFaction( ply, tbl )
 		end
 		GM.FactionsCount = GM.FactionsCount + 1
 		GM.Factions[GM.FactionsCount]= {
-			name = fname
-			id=GM.FactionsCount
+			name = fname,
+			id=GM.FactionsCount,
 			password=fpassword
 		}
 		team.SetUp( GM.FactionSCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
