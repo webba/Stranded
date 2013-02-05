@@ -117,14 +117,14 @@ function JoinFaction( ply, tbl )
 		for k,v in pairs(GM.Factions) do
 			if tbl[1] == v.name then
 				if tbl[2] then --Password
-					if tbl[2]==v.password then 
+					if tbl[2] == v.password then 
 						ply:SetTeam(v.id) 
 						ply:ChatPrint("Joined: "..v.name)
 					else
 						ply:ChatPrint("Failed to join Faction, Incorrect Password")
 					end
 				else
-					if v.password="" then 
+					if v.password == "" then 
 						ply:SetTeam(v.id) 
 						ply:ChatPrint("Joined: "..v.name)
 					end
