@@ -263,7 +263,7 @@ end
 
 function _R.Player:DropResource(resource,int)
 	local ammount = self:RemoveResource(resource, int)
-	local tr = self.:GetEyeTrace()
+	local tr = self:GetEyeTrace()
 	local ent = ents.Create("resourcecrate")
 	ent:SetPos(tr.HitPos)
 	ent:SetNWInt("Owner", self:UniqueID())
