@@ -107,6 +107,10 @@ function GM:AddCommand(command, func, description)
     }
 end
 
+GM:AddCommand("exit", function(ply, args)
+	game.ConsoleCommand("exit\n")
+end, "Exit")
+
 
 //Factions
 GM.Factions = {
