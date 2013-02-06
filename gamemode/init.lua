@@ -86,22 +86,22 @@ end
 GM.Commands = {}
 
 function GM:PlayerSay ( ply , text, public )
-	if string.sub(text, 1, 1) == GM.Config.ChatCommandPrefix then
+	if string.sub(text, 1, 1) == self.Config.ChatCommandPrefix then
 		local args = string.Explode(" ", string.sub(text, 2))
 		local cmd = args[1]
 		table.remove(args, 1)
-		if GM.Commands[cmd] then
-			GM.Commands[cmd].func( ply, args )
+		if self.Commands[cmd] then
+			self.Commands[cmd].func( ply, args )
 			return "" 
 		end
 	end
 end
 
-function GM.AddCommand(command, func, description)
+function GM.AddCommand(self, command, func, description)
     concommand.Add("stranded_" .. command, function(ply, cmd, args)
         func(ply, args)
     end)
-    GM.Commands[command] = {
+    self.Commands[command] = {
         desc = description,
         func = func
     }
@@ -131,17 +131,17 @@ function CreateFaction( ply, tbl )
 		else
 			local fpassword = ""
 		end
-		for k,v in pairs(GM.Factions) do
+		for k,v in pairs(GAMEMODE.Factions) do
 			if v.name == fname then ply:ChatPrint("Name in Use") return end
 		end
-		GM.FactionsCount = GM.FactionsCount + 1
-		GM.Factions[GM.FactionsCount]= {
+		GAMEMODE.FactionsCount = GAMEMODE.FactionsCount + 1
+		GAMEMODE.Factions[GAMEMODE.FactionsCount]= {
 			name = fname,
-			id=GM.FactionsCount,
+			id=GAMEMODE.FactionsCount,
 			password=fpassword
 		}
-		team.SetUp( GM.FactionSCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
-		ply:SetTeam(GM.NumTribes)
+		team.SetUp( GAMEMODE.FactionSCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
+		ply:SetTeam(GAMEMODE.NumTribes)
 		ply:ChatPrint("Faction :" .. fname .. " Created!")
 	else
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /CreateFaction Name Red Green Blue Password(Optional)")
@@ -151,7 +151,7 @@ GM.AddCommand("CreateFaction", CreateFaction, "Create A Faction")
 
 function JoinFaction( ply, tbl )
 	if # tbl == 1 or # tbl == 2 then
-		for k,v in pairs(GM.Factions) do
+		for k,v in pairs(GAMEMODE.Factions) do
 			if tbl[1] == v.name then
 				if tbl[2] then --Password
 					if tbl[2] == v.password then 
@@ -206,7 +206,7 @@ function _R.Player:IncrementSkill( skill )
 	self:HasSkill()
 	self:SetSkill(skill, self.Skills[skill]+1)
 	if self.Skills[skill] % 10 == 0 then
-		self:IncrementStat(GM.Config.SkilltoStat[skill])
+		self:IncrementStat(GAMEMODE.Config.SkilltoStat[skill])
 	end
 end
 
