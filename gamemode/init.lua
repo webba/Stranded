@@ -140,7 +140,7 @@ function CreateFaction( ply, tbl )
 			id=GAMEMODE.FactionsCount,
 			password=fpassword
 		}
-		team.SetUp( GAMEMODE.FactionSCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
+		team.SetUp( GAMEMODE.FactionsCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
 		ply:SetTeam(GAMEMODE.NumTribes)
 		ply:ChatPrint("Faction :" .. fname .. " Created!")
 	else
