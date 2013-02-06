@@ -14,7 +14,7 @@ GM.Config.SkilltoStat["Cooking"] = "Intelligence"
 GM.Config.SkilltoStat["Fishing"] = "Agility"
 
 GM.Config.DefaultStats = {
-	Strength = 10,
-	Intelligence = 10,
-	Agility = 10
+	strength = 10,
+	intelligence = 10,
+	agility = 10
 }
