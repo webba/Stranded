@@ -54,7 +54,6 @@ function DefaultLoadout( ply )
     end 
  
 end
---hook.Add( "PlayerLoadout", "DefaultLoadout", DefaultLoadout)
 
 function PlayerNeeds()
 	for k, ply in pairs(player.GetAll()) do
@@ -93,7 +92,10 @@ function RunChatCommand( ply , text, public )
 		end
 	end
 end
-hook.Add( "PlayerSay", "ChatCommand", RunChatCommand )
+
+function GM:PlayerSay ( ply , text, public )
+	RunChatCommand( ply , text, public )
+end
 
 function GM.AddCommand(command, func, description)
     concommand.Add("stranded_" .. command, function(ply, cmd, args)
