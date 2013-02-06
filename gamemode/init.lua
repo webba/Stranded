@@ -34,14 +34,14 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetWalkSpeed(GM.Config.Walkspeed)--Set Speed
 	ply:SetRunSpeed(CalculateRunSpeed( ply ))
 
-	DefaultLoadout(ply)--Set Loadout
+
 end
 
 function CalculateRunSpeed( ply )
 	return (GM.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
 end
 
-function DefaultLoadout( ply ) 
+function GM:PlayerLoadout( ply ) 
  
     if ply:Team() == 1 then 
 
