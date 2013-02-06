@@ -22,10 +22,8 @@ _R.Player.Stats = {}
 _R.Player.Experience = {}
 _R.Player.Resources = {}
 
-
-function FirstSpawn( ply )
- 
-    ply:SetTeam( 1 )--Set Team
+function GM:PlayerInitialSpawn(ply)
+	ply:SetTeam( 1 )--Set Team
 
 	ply.Stats = GM.Config.DefaultStats
 	ply.Food = 100
@@ -37,9 +35,7 @@ function FirstSpawn( ply )
 	ply:SetRunSpeed(CalculateRunSpeed( ply ))
 
 	DefaultLoadout(ply)--Set Loadout
- 
-end 
-hook.Add( "PlayerInitialSpawn", "FirstSpawn", FirstSpawn )
+end
 
 function CalculateRunSpeed( ply )
 	return (GM.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
