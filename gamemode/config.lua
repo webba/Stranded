@@ -1,21 +1,21 @@
-GM.Config={}
+GAMEMODE.Config={}
 
-GM.Config.Walkspeed = 250
-GM.Config.Runspeed = 300 
+GAMEMODE.Config.Walkspeed = 250
+GAMEMODE.Config.Runspeed = 300 
 
-GM.Config.StartingWeapons = { "gmod_camera" }
+GAMEMODE.Config.StartingWeapons = { "gmod_camera" }
 
-GM.Config.ChatCommandPrefix = "/"
+GAMEMODE.Config.ChatCommandPrefix = "/"
 
-GM.Config.SkilltoStat = {}
-GM.Config.SkilltoStat["Woodcutting"] = "Strength"
-GM.Config.SkilltoStat["Mining"] = "Strength"
-GM.Config.SkilltoStat["Foraging"] = "Agility"
-GM.Config.SkilltoStat["Weapon Crafting"] = "Intelligence"
-GM.Config.SkilltoStat["Cooking"] = "Intelligence"
-GM.Config.SkilltoStat["Fishing"] = "Agility"
+GAMEMODE.Config.SkilltoStat = {}
+GAMEMODE.Config.SkilltoStat["Woodcutting"] = "Strength"
+GAMEMODE.Config.SkilltoStat["Mining"] = "Strength"
+GAMEMODE.Config.SkilltoStat["Foraging"] = "Agility"
+GAMEMODE.Config.SkilltoStat["Weapon Crafting"] = "Intelligence"
+GAMEMODE.Config.SkilltoStat["Cooking"] = "Intelligence"
+GAMEMODE.Config.SkilltoStat["Fishing"] = "Agility"
 
-GM.Config.DefaultStats={}
-GM.Config.DefaultStats.Strength = 10
-GM.Config.DefaultStats.Intelligence = 10
-GM.Config.DefaultStats.Agility = 10
+GAMEMODE.Config.DefaultStats={}
+GAMEMODE.Config.DefaultStats.Strength = 10
+GAMEMODE.Config.DefaultStats.Intelligence = 10
+GAMEMODE.Config.DefaultStats.Agility = 10
