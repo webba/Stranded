@@ -22,23 +22,23 @@ _R.Player.Stats = {}
 _R.Player.Experience = {}
 _R.Player.Resources = {}
 
-function GM:PlayerInitialSpawn(ply)
+function GM:PlayerInitialSpawn( ply )
 	ply:SetTeam( 1 )--Set Team
 
-	ply.Stats = self.Config.DefaultStats
+	ply.Stats = ply.Stats or self.Config.DefaultStats
 	ply.Food = 100
 	ply.Tiredness = 100
 	ply.Water = 100
 	ply.AFK = false
 
-	ply:SetWalkSpeed(self.Config.Walkspeed)--Set Speed
-	ply:SetRunSpeed(self:CalculateRunSpeed( ply ))
+	ply:SetWalkSpeed( self.Config.Walkspeed )--Set Speed
+	ply:SetRunSpeed( self:CalculateRunSpeed( ply ) )
 
 
 end
 
 function GM:CalculateRunSpeed( ply )
-	return (self.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
+	return ( self.Config.Runspeed * math.sqrt( ply.Stats.Agility/10 ) )
 end
 
 function GM:PlayerLoadout( ply ) 
@@ -47,8 +47,8 @@ function GM:PlayerLoadout( ply )
 
     	ply:StripWeapons()
     	ply:StripAmmo() 
-    	for k,v in pairs(self.Config.StartingWeapons) do
-    		ply:Give(v)
+    	for k, v in pairs( self.Config.StartingWeapons ) do
+    		ply:Give( v )
     	end
     	 
     end 
