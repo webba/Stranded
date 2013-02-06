@@ -2,6 +2,8 @@ GM.Version = "3.0"
 GM.Name = "Stranded"
 GM.Author = "LeWeeeb"
 
+GM.Config = {}
+
 DeriveGamemode( "sandbox" )
 
 //Client side lua files
