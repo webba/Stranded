@@ -72,14 +72,14 @@ function PlayerNeeds()
 end
 
 function _R.Player.GetStats(self, type)
-	if self:GetDTInt(type) == 0 and GM.Config.DefaultStats[type] then
-		self:SetDTInt(type, GM.Config.DefaultStats[type])
+	if self:GetNWInt(type) == 0 and GM.Config.DefaultStats[type] then
+		self:SetNWInt(type, GM.Config.DefaultStats[type])
 	end
-	return self:GetDTInt(type)
+	return self:GetNWInt(type)
 end
 
 function _R.Player.SetStats(self, type, value)
-	self:SetDTInt(type, value)
+	self:SetNWInt(type, value)
 end
 
 //Chat Commands
