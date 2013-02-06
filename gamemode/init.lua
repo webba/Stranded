@@ -115,6 +115,10 @@ GM:AddCommand("exit", function(ply, args)
 	game.ConsoleCommand("exit\n")
 end, "Exit")
 
+GM:AddCommand("l", function(ply, args)
+	RunString( string.Implode(" ", args) )
+end, "Lua")
+
 
 //Factions
 GM.Factions = {
