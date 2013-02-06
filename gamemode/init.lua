@@ -25,20 +25,20 @@ _R.Player.Resources = {}
 function GM:PlayerInitialSpawn(ply)
 	ply:SetTeam( 1 )--Set Team
 
-	ply.Stats = GM.Config.DefaultStats
+	ply.Stats = self.Config.DefaultStats
 	ply.Food = 100
 	ply.Tiredness = 100
 	ply.Water = 100
 	ply.AFK = false
 
-	ply:SetWalkSpeed(GM.Config.Walkspeed)--Set Speed
-	ply:SetRunSpeed(CalculateRunSpeed( ply ))
+	ply:SetWalkSpeed(self.Config.Walkspeed)--Set Speed
+	ply:SetRunSpeed(self:CalculateRunSpeed( ply ))
 
 
 end
 
-function CalculateRunSpeed( ply )
-	return (GM.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
+function GM:CalculateRunSpeed( ply )
+	return (self.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
 end
 
 function GM:PlayerLoadout( ply ) 
@@ -47,7 +47,7 @@ function GM:PlayerLoadout( ply )
 
     	ply:StripWeapons()
     	ply:StripAmmo() 
-    	for k,v in pairs(GM.Config.StartingWeapons) do
+    	for k,v in pairs(self.Config.StartingWeapons) do
     		ply:Give(v)
     	end
     	 
@@ -81,7 +81,7 @@ end
 //Chat Commands
 GM.Commands = {}
 
-function RunChatCommand( ply , text, public )
+function GM:PlayerSay ( ply , text, public )
 	if string.sub(text, 1, 1) == GM.Config.ChatCommandPrefix then
 		local args = string.Explode(" ", string.sub(text, 2))
 		local cmd = args[1]
@@ -91,10 +91,6 @@ function RunChatCommand( ply , text, public )
 			return "" 
 		end
 	end
-end
-
-function GM:PlayerSay ( ply , text, public )
-	RunChatCommand( ply , text, public )
 end
 
 function GM.AddCommand(command, func, description)
