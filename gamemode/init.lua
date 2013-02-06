@@ -21,7 +21,7 @@ function FirstSpawn( ply )
  
     ply:SetTeam( 1 )--Set Team
 
-	self:PlayerLoadout(ply)--Set Loadout
+	GM.PlayerLoadout(ply)--Set Loadout
 
 	ply.Stats = GM.Config.DefaultStats
 	ply.Food = 100
@@ -45,7 +45,7 @@ function DefaultLoadout( ply )
 
     	ply:StripWeapons()
     	ply:StripAmmo() 
-    	for k,v in pairs(GM.Config.StartingWeapons) do
+    	for k,v in pairs(GAMEMODE.Config.StartingWeapons) do
     		ply:Give(v)
     	end
     	 
