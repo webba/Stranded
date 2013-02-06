@@ -107,6 +107,10 @@ function GM:AddCommand(command, func, description)
     }
 end
 
+function _R.Player.IsAdmin(self)
+	return true
+end
+
 GM:AddCommand("exit", function(ply, args)
 	game.ConsoleCommand("exit\n")
 end, "Exit")
@@ -145,7 +149,7 @@ function CreateFaction( ply, tbl )
 			password=fpassword
 		}
 		team.SetUp( GAMEMODE.FactionsCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
-		ply:SetTeam(GAMEMODE.NumTribes)
+		ply:SetTeam(GAMEMODE.FactionsCount)
 		ply:ChatPrint("Faction :" .. fname .. " Created!")
 	else
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /CreateFaction Name Red Green Blue Password(Optional)")
