@@ -1,7 +1,7 @@
 GM.Config.Walkspeed = 250
 GM.Config.Runspeed = 300 
 
-GM.Config.StartingWeapons = { "gmod_camera" }
+GM.Config.StartingWeapons = { "gmod_camera", "weapon_crowbar" }
 
 GM.Config.ChatCommandPrefix = "/"
 
