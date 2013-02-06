@@ -21,7 +21,7 @@ function FirstSpawn( ply )
  
     ply:SetTeam( 1 )--Set Team
 
-	GM.PlayerLoadout(ply)--Set Loadout
+	DefaultLoadout(ply)--Set Loadout
 
 	ply.Stats = GM.Config.DefaultStats
 	ply.Food = 100
@@ -52,7 +52,6 @@ function DefaultLoadout( ply )
     end 
  
 end
-hook.Add( "PlayerLoadout", "DefaultLoadout", DefaultLoadout)
 
 function PlayerNeeds()
 	for k, ply in pairs(player.GetAll()) do
