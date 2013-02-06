@@ -97,7 +97,7 @@ function GM:PlayerSay ( ply , text, public )
 	end
 end
 
-function GM.AddCommand(self, command, func, description)
+function GM:AddCommand(command, func, description)
     concommand.Add("stranded_" .. command, function(ply, cmd, args)
         func(ply, args)
     end)
@@ -147,7 +147,7 @@ function CreateFaction( ply, tbl )
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /CreateFaction Name Red Green Blue Password(Optional)")
 	end
 end
-GM.AddCommand("CreateFaction", CreateFaction, "Create A Faction")
+GM:AddCommand("CreateFaction", CreateFaction, "Create A Faction")
 
 function JoinFaction( ply, tbl )
 	if # tbl == 1 or # tbl == 2 then
@@ -174,20 +174,20 @@ function JoinFaction( ply, tbl )
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /JoinFaction Name Password(Optional)")
 	end
 end
-GM.AddCommand("JoinFaction", JoinFaction, "Join A Faction")
+GM:AddCommand("JoinFaction", JoinFaction, "Join A Faction")
 
 function LeaveFaction( ply, tbl )
 	local f = team.GetName( ply:Team() )
 	ply:SetTeam(1)
 	ply:ChatPrint("You Left "..f)
 end
-GM.AddCommand("LeaveFaction", LeaveFaction, "Leave Your Current Faction")
+GM:AddCommand("LeaveFaction", LeaveFaction, "Leave Your Current Faction")
 
 function AFK( ply, tbl )
 	ply:Freeze(!ply.AFK)
 	ply.AFK = !ply.AFK
 end
-GM.AddCommand("AFK", AFK, "Go afk derp")
+GM:AddCommand("AFK", AFK, "Go afk derp")
 
 
 //XP/Level System 
