@@ -17,15 +17,10 @@ include("config.lua")
 //Player
 
 local _R = debug.getregistry()
-_R.Player.Skills = {}
-_R.Player.Stats = {}
-_R.Player.Experience = {}
-_R.Player.Resources = {}
 
 function GM:PlayerInitialSpawn( ply )
 	ply:SetTeam( 1 )--Set Team
 
-	ply.Stats = ply.Stats or self.Config.DefaultStats
 	ply.Food = 100
 	ply.Tiredness = 100
 	ply.Water = 100
@@ -33,12 +28,10 @@ function GM:PlayerInitialSpawn( ply )
 
 	ply:SetWalkSpeed( self.Config.Walkspeed )--Set Speed
 	ply:SetRunSpeed( self:CalculateRunSpeed( ply ) )
-
-
 end
 
 function GM:CalculateRunSpeed( ply )
-	return ( self.Config.Runspeed * math.sqrt( ply.Stats.Agility/10 ) )
+	return ( self.Config.Runspeed * math.sqrt( ply:GetStats('agility') / 10 ) )
 end
 
 function GM:PlayerLoadout( ply ) 
@@ -76,6 +69,17 @@ function PlayerNeeds()
 			end
 		end
 	end
+end
+
+function _R.Player.GetStats(self, type)
+	if self:GetDTInt(type) == 0 and GM.Config.DefaultStats[type] then
+		self:SetDTInt(type, GM.Config.DefaultStats[type])
+	end
+	return self:GetDTInt(type)
+end
+
+function _R.Player.SetStats(self, type, value)
+	self:SetDTInt(type, value)
 end
 
 //Chat Commands
@@ -226,7 +230,7 @@ end
 
 
 function _R.Player:IncrementStat( skill )
-	self.Stats[skill]=self.Stats[skill]+1
+	self:SetStats( skill, self:GetStats(skill) + 1 )
 end
 
 //Resources System
