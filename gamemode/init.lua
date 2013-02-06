@@ -72,8 +72,8 @@ function PlayerNeeds()
 end
 
 function _R.Player.GetStats(self, type)
-	if self:GetNWInt(type) == 0 and GM.Config.DefaultStats[type] then
-		self:SetNWInt(type, GM.Config.DefaultStats[type])
+	if self:GetNWInt(type) == 0 and GAMEMODE.Config.DefaultStats[type] then
+		self:SetNWInt(type, GAMEMODE.Config.DefaultStats[type])
 	end
 	return self:GetNWInt(type)
 end
