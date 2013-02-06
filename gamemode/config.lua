@@ -13,7 +13,8 @@ GM.Config.SkilltoStat["Weapon Crafting"] = "Intelligence"
 GM.Config.SkilltoStat["Cooking"] = "Intelligence"
 GM.Config.SkilltoStat["Fishing"] = "Agility"
 
-GM.Config.DefaultStats={}
-GM.Config.DefaultStats.Strength = 10
-GM.Config.DefaultStats.Intelligence = 10
-GM.Config.DefaultStats.Agility = 10
+GM.Config.DefaultStats = {
+	Strength = 10,
+	Intelligence = 10,
+	Agility = 10
+}
