@@ -146,10 +146,10 @@ function CreateFaction( ply, tbl )
 		for k,v in pairs(GAMEMODE.Factions) do
 			if v.name == fname then ply:ChatPrint("Name in Use") return end
 		end
-		GAMEMODE.FactionsCount = GAMEMODE.FactionsCount + 1
-		GAMEMODE.Factions[GAMEMODE.FactionsCount]= {
+		GM.FactionsCount = GM.FactionsCount + 1
+		GM.Factions[GM.FactionsCount]= {
 			name = fname,
-			id=GAMEMODE.FactionsCount,
+			id=GM.FactionsCount,
 			password=fpassword
 		}
 		team.SetUp( GAMEMODE.FactionsCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
