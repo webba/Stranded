@@ -111,6 +111,7 @@ GM.Factions = {
 		password = ""
 	}
 }
+GM.FactionsCount= 1
 
 function CreateFaction( ply, tbl )
 	if # tbl == 5 or # tbl == 4 then
