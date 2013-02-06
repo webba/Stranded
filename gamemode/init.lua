@@ -1,3 +1,7 @@
+GM.Version = "3.0"
+GM.Name = "Stranded"
+GM.Author = "LeWeeeb"
+
 DeriveGamemode( "sandbox" )
 
 //Client side lua files
@@ -21,13 +25,13 @@ function FirstSpawn( ply )
  
     ply:SetTeam( 1 )--Set Team
 
-	ply.Stats = GAMEMODE.Config.DefaultStats
+	ply.Stats = GM.Config.DefaultStats
 	ply.Food = 100
 	ply.Tiredness = 100
 	ply.Water = 100
 	ply.AFK = false
 
-	ply:SetWalkSpeed(GAMEMODE.Config.Walkspeed)--Set Speed
+	ply:SetWalkSpeed(GM.Config.Walkspeed)--Set Speed
 	ply:SetRunSpeed(CalculateRunSpeed( ply ))
 
 	DefaultLoadout(ply)--Set Loadout
@@ -36,7 +40,7 @@ end
 hook.Add( "PlayerInitialSpawn", "FirstSpawn", FirstSpawn )
 
 function CalculateRunSpeed( ply )
-	return (GAMEMODE.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
+	return (GM.Config.Runspeed * math.sqrt(ply.Stats.Agility/10))
 end
 
 function DefaultLoadout( ply ) 
@@ -45,7 +49,7 @@ function DefaultLoadout( ply )
 
     	ply:StripWeapons()
     	ply:StripAmmo() 
-    	for k,v in pairs(GAMEMODE.Config.StartingWeapons) do
+    	for k,v in pairs(GM.Config.StartingWeapons) do
     		ply:Give(v)
     	end
     	 
@@ -78,26 +82,26 @@ function PlayerNeeds()
 end
 
 //Chat Commands
-GAMEMODE.Commands = {}
+GM.Commands = {}
 
 function RunChatCommand( ply , text, public )
-	if string.sub(text, 1, 1) == GAMEMODE.Config.ChatCommandPrefix then
+	if string.sub(text, 1, 1) == GM.Config.ChatCommandPrefix then
 		local args = string.Explode(" ", string.sub(text, 2))
 		local cmd = args[1]
 		table.remove(args, 1)
-		if GAMEMODE.Commands[cmd] then
-			GAMEMODE.Commands[cmd].func( ply, args )
+		if GM.Commands[cmd] then
+			GM.Commands[cmd].func( ply, args )
 			return "" 
 		end
 	end
 end
 hook.Add( "PlayerSay", "ChatCommand", RunChatCommand )
 
-function GAMEMODE.AddCommand(command, func, description)
+function GM.AddCommand(command, func, description)
     concommand.Add("stranded_" .. command, function(ply, cmd, args)
         func(ply, args)
     end)
-    GAMEMODE.Commands[command] = {
+    GM.Commands[command] = {
         desc = description,
         func = func
     }
@@ -105,14 +109,14 @@ end
 
 
 //Factions
-GAMEMODE.Factions = {
+GM.Factions = {
 	{ 
 		name = "Default_Faction",
 		id=1,
 		password = ""
 	}
 }
-GAMEMODE.FactionsCount= 1
+GM.FactionsCount= 1
 
 function CreateFaction( ply, tbl )
 	if # tbl == 5 or # tbl == 4 then
@@ -127,27 +131,27 @@ function CreateFaction( ply, tbl )
 		else
 			local fpassword = ""
 		end
-		for k,v in pairs(GAMEMODE.Factions) do
+		for k,v in pairs(GM.Factions) do
 			if v.name == fname then ply:ChatPrint("Name in Use") return end
 		end
-		GAMEMODE.FactionsCount = GAMEMODE.FactionsCount + 1
-		GAMEMODE.Factions[GAMEMODE.FactionsCount]= {
+		GM.FactionsCount = GM.FactionsCount + 1
+		GM.Factions[GM.FactionsCount]= {
 			name = fname,
-			id=GAMEMODE.FactionsCount,
+			id=GM.FactionsCount,
 			password=fpassword
 		}
-		team.SetUp( GAMEMODE.FactionSCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
-		ply:SetTeam(GAMEMODE.NumTribes)
+		team.SetUp( GM.FactionSCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
+		ply:SetTeam(GM.NumTribes)
 		ply:ChatPrint("Faction :" .. fname .. " Created!")
 	else
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /CreateFaction Name Red Green Blue Password(Optional)")
 	end
 end
-GAMEMODE.AddCommand("CreateFaction", CreateFaction, "Create A Faction")
+GM.AddCommand("CreateFaction", CreateFaction, "Create A Faction")
 
 function JoinFaction( ply, tbl )
 	if # tbl == 1 or # tbl == 2 then
-		for k,v in pairs(GAMEMODE.Factions) do
+		for k,v in pairs(GM.Factions) do
 			if tbl[1] == v.name then
 				if tbl[2] then --Password
 					if tbl[2] == v.password then 
@@ -170,20 +174,20 @@ function JoinFaction( ply, tbl )
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /JoinFaction Name Password(Optional)")
 	end
 end
-GAMEMODE.AddCommand("JoinFaction", JoinFaction, "Join A Faction")
+GM.AddCommand("JoinFaction", JoinFaction, "Join A Faction")
 
 function LeaveFaction( ply, tbl )
 	local f = team.GetName( ply:Team() )
 	ply:SetTeam(1)
 	ply:ChatPrint("You Left "..f)
 end
-GAMEMODE.AddCommand("LeaveFaction", LeaveFaction, "Leave Your Current Faction")
+GM.AddCommand("LeaveFaction", LeaveFaction, "Leave Your Current Faction")
 
 function AFK( ply, tbl )
 	ply:Freeze(!ply.AFK)
 	ply.AFK = !ply.AFK
 end
-GAMEMODE.AddCommand("AFK", AFK, "Go afk derp")
+GM.AddCommand("AFK", AFK, "Go afk derp")
 
 
 //XP/Level System 
@@ -202,7 +206,7 @@ function _R.Player:IncrementSkill( skill )
 	self:HasSkill()
 	self:SetSkill(skill, self.Skills[skill]+1)
 	if self.Skills[skill] % 10 == 0 then
-		self:IncrementStat(GAMEMODE.Config.SkilltoStat[skill])
+		self:IncrementStat(GM.Config.SkilltoStat[skill])
 	end
 end
 
