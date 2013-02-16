@@ -121,13 +121,9 @@ end, "Lua")
 
 
 //Factions
-GM.Factions = {
-	{ 
-		name = "Default_Faction",
-		id=1,
-		password = ""
-	}
-}
+defaultfaction = {name = "Default_Faction",id=1,password = ""}
+GM.Factions = {}
+GM.Factions[1] = defaultfaction
 GM.FactionsCount= 1
 
 function CreateFaction( ply, tbl )
@@ -160,6 +156,8 @@ function CreateFaction( ply, tbl )
 	end
 end
 GM:AddCommand("CreateFaction", CreateFaction, "Create A Faction")
+
+function FindFaction()
 
 function JoinFaction( ply, tbl )
 	if # tbl == 1 or # tbl == 2 then
