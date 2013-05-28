@@ -129,40 +129,74 @@ GM.FactionsCount= 1
 function CreateFaction( ply, tbl )
 	if # tbl == 5 or # tbl == 4 then
 		local fname = tbl[1]
+		if ( string.match( fname, "%W" ) ) then 
+			ply:ChatPrint( "Please only use Letters and Numbers in Name and Password" )
+			return
+		end
+		local fpassword = ""
 		local color = 	{
 			red=math.Clamp(tonumber(tbl[2]),0,255),
 			green=math.Clamp(tonumber(tbl[3]),0,255),
 			blue=math.Clamp(tonumber(tbl[4]),0,255)
 		}
 		if tbl[5] and tbl[5] ~= "" then
-			local fpassword = tbl[5]
+			fpassword = tbl[5]
+			if ( string.match( fpassword, "%W" ) ) then
+				ply:ChatPrint( "Please only use Letters and Numbers in Name and Password" )
+			return
+		end
 		else
-			local fpassword = ""
+			fpassword = ""
 		end
 		for k,v in pairs(GAMEMODE.Factions) do
 			if v.name == fname then ply:ChatPrint("Name in Use") return end
 		end
-		GM.FactionsCount = GM.FactionsCount + 1
-		GM.Factions[GM.FactionsCount]= {
-			name = fname,
-			id=GM.FactionsCount,
-			password=fpassword
-		}
+		GAMEMODE.FactionsCount = GAMEMODE.FactionsCount + 1
+		GAMEMODE.Factions[GAMEMODE.FactionsCount] = {}
+		GAMEMODE.Factions[GAMEMODE.FactionsCount].name = fname
+		GAMEMODE.Factions[GAMEMODE.FactionsCount].id = GAMEMODE.FactionsCount
+		GAMEMODE.Factions[GAMEMODE.FactionsCount].password = fpassword
+		ply:ChatPrint(2.01)
+		ply:ChatPrint("fname")
+		ply:ChatPrint(tostring(Vector(1, 2, 3)))
+		umsg.Start("NewFaction")
+			umsg.String( "fname" )
+			umsg.Float( 2.01 )
+			umsg.Vector( Vector(1, 2, 3) )
+		umsg.End()
+
 		team.SetUp( GAMEMODE.FactionsCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
 		ply:SetTeam(GAMEMODE.FactionsCount)
-		ply:ChatPrint("Faction :" .. fname .. " Created!")
+		ply:ChatPrint("Faction: " .. fname .. " Created!")
 	else
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /CreateFaction Name Red Green Blue Password(Optional)")
 	end
 end
 GM:AddCommand("CreateFaction", CreateFaction, "Create A Faction")
 
-function FindFaction()
+function FindFactions(ply, tbl)
+	if # tbl == 1 then
+		if tbl[1] == "all" then
+			for k,v in pairs(GAMEMODE.Factions) do
+				ply:ChatPrint(k .. ":")
+				for kk,vv in pairs(v) do
+					ply:ChatPrint("\t" .. kk .. " --> " .. vv)
+				end
+			end
+		end
+		if tbl[1] == "my" then
+			ply:ChatPrint("Your Faction: " .. GAMEMODE.Factions[ply:Team()].name)
+		end
+	end 
+end
+GM:AddCommand("FindFactions", FindFactions, "Print all Factions")
 
 function JoinFaction( ply, tbl )
+	local found = false
 	if # tbl == 1 or # tbl == 2 then
 		for k,v in pairs(GAMEMODE.Factions) do
 			if tbl[1] == v.name then
+				found = true
 				if tbl[2] then --Password
 					if tbl[2] == v.password then 
 						ply:SetTeam(v.id) 
@@ -174,12 +208,15 @@ function JoinFaction( ply, tbl )
 					if v.password == "" then 
 						ply:SetTeam(v.id) 
 						ply:ChatPrint("Joined: "..v.name)
+					else 
+						ply:ChatPrint("This Faction has a password")
 					end
 				end --End Password
-			else
-				ply:ChatPrint("Failed to join Faction, Invalid Name")
 			end
 		end --End For
+		if !found then
+			ply:ChatPrint("Failed to join Faction, Invalid Name")
+		end
 	else 
 		ply:ChatPrint("Incorrect Syntax! Syntax is: /JoinFaction Name Password(Optional)")
 	end
