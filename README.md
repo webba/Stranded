@@ -3,7 +3,7 @@ Stranded
 
 Rewrite of stranded for GMod 13
 
-Ideas/To do list
+Ideas/To do list:
 
 1)Levels system
 
