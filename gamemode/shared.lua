@@ -4,4 +4,4 @@ GM.Author = "By Webba, Ninja101"
 GM.Website 	= "http://boonclan.co.uk/" 
 
 //Teams 
-team.SetUp( 1, "Default_Faction", Color( 125, 125, 125, 255 ) ) --Default team
+//team.SetUp( 1, "Default_Faction", Color( 125, 125, 125, 255 ) ) --Default team

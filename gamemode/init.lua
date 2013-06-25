@@ -28,6 +28,15 @@ function GM:PlayerInitialSpawn( ply )
 
 	ply:SetWalkSpeed( self.Config.Walkspeed )--Set Speed
 	ply:SetRunSpeed( self:CalculateRunSpeed( ply ) )
+
+	for k,v in pairs(GAMEMODE.Factions) do
+		PrintTable(v) 
+		umsg.Start("NewFaction")
+			umsg.String( v.name )
+			umsg.Float( v.id )
+			umsg.Vector( Vector( v.fcolor.r, v.fcolor.g, v.fcolor.b ) )
+		umsg.End()
+	end
 end
 
 function GM:CalculateRunSpeed( ply )
@@ -121,7 +130,8 @@ end, "Lua")
 
 
 //Factions
-defaultfaction = {name = "Default_Faction",id=1,password = ""}
+defaultfaction = {name = "Default_Faction",id=1,password = "", fcolor=Color(125, 125, 125, 255)}
+team.SetUp(1, "Default_Faction", Color(125, 125, 125, 255))
 GM.Factions = {}
 GM.Factions[1] = defaultfaction
 GM.FactionsCount= 1
@@ -151,18 +161,23 @@ function CreateFaction( ply, tbl )
 		for k,v in pairs(GAMEMODE.Factions) do
 			if v.name == fname then ply:ChatPrint("Name in Use") return end
 		end
+
+
 		GAMEMODE.FactionsCount = GAMEMODE.FactionsCount + 1
 		GAMEMODE.Factions[GAMEMODE.FactionsCount] = {}
 		GAMEMODE.Factions[GAMEMODE.FactionsCount].name = fname
 		GAMEMODE.Factions[GAMEMODE.FactionsCount].id = GAMEMODE.FactionsCount
 		GAMEMODE.Factions[GAMEMODE.FactionsCount].password = fpassword
-		ply:ChatPrint(2.01)
-		ply:ChatPrint("fname")
-		ply:ChatPrint(tostring(Vector(1, 2, 3)))
+		GAMEMODE.Factions[GAMEMODE.FactionsCount].fcolor = Color(color.red, color.green, color.blue, 255)
+
+		local colorvector = Vector(color.red, color.green, color.blue)
+		ply:ChatPrint(GAMEMODE.FactionsCount)
+		ply:ChatPrint(fname)
+		ply:ChatPrint(tostring(colorvector))
 		umsg.Start("NewFaction")
-			umsg.String( "fname" )
-			umsg.Float( 2.01 )
-			umsg.Vector( Vector(1, 2, 3) )
+			umsg.String( fname )
+			umsg.Float( GAMEMODE.FactionsCount )
+			umsg.Vector( colorvector )
 		umsg.End()
 
 		team.SetUp( GAMEMODE.FactionsCount, fname, Color( color.red, color.green, color.blue, 255 ) ) 
